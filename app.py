@@ -6,11 +6,11 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
 
-from flask import Flask, jsonify
-
-engine = create_engine("sqlite:///hawaii.sqlite")
+from flask import Flask, json, jsonify
 
 Base = automap_base()
+
+engine = create_engine("sqlite:///hawaii.sqlite")
 
 Base.prepare(engine, reflect=True)
 
@@ -31,9 +31,31 @@ def welcome():
         f"/api/v1.0/<start>/<end>"
     )
 
+@app.route("/api/v1.0/precipitation")
+def precipitation():
+
+  session = Session(engine)
+
+  results = results = session.query(Measurement.date, Measurement.prcp).\
+    filter(Measurement.date > '2016-08-23)').\
+    order_by(Measurement.date).all()
+
+  session.close()
+  
+  all_precipitaiton = []
+  
+  for date, prcp in results:
+      precipitation_dict = {}
+      precipitation_dict['date'] = date
+      precipitation_dict['prcp'] = prcp
+      all_precipitaiton.append(precipitation_dict)
+
+  return jsonify(all_precipitaiton)
+
+
+
 if __name__ == '__main__':
     app.run(debug=True)
-
 
 
 
