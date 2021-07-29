@@ -100,7 +100,7 @@ def tobs():
         tobs_dict["tobs"] = tob
         all_tobs.append(tobs_dict)
     
-    return jsonify(all_tobs)
+    return jsonify(results)
 
 
 
